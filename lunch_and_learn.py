@@ -104,46 +104,47 @@ plt.show()
 # Comparing monthly occupancy differences 
 
 # Refining for the January and December sector occupancy 
-jan_sector_occupancy = data[data["month"]==1].groupby(by="sector").sum()
-dec_sector_occupancy = data[data["month"]==12].groupby(by="sector").sum()
+jan_sector_occupancy = data[data["month"]==1].groupby(by="sector").sum().reset_index()
+dec_sector_occupancy = data[data["month"]==12].groupby(by="sector").sum().reset_index()
 
 # Plotting two subplots of the monthly data
 
 # Creating a figure 
-fig = plt.figure(figsize=(16,16))
+fig = plt.figure(figsize=(18,6))
 
 # Creating the first subplot
 
 # Plots a graph within the first subplot space
 ax1 = fig.add_subplot(121)
 
-# Creating a list of sector groups 
-sector_group = ["Co-ed", 
-                "Families", 
-                "Men",
-                "Women", 
-                "Youth"]
-
-# Plots a pie graph, emphasizing the youth group, and adding a percentage 
-ax1.pie(jan_sector_occupancy["occupancy"],
-        labels=sector_group,
-        explode=(0, 0, 0, 0, 0.2),
-        autopct="%1.1f%%")
-
+# Plots a bar graph, emphasizing the youth group in blue 
+ax1.bar(data=jan_sector_occupancy,
+        x="sector",
+        height="occupancy",
+        color=["grey", "grey", "grey", "grey", "blue"])
+        
 # Adding a title for the first plot 
 plt.title("Toronto Occupancy Distribution - January 2020")
 
-# Plots a graph within the second subplot space
-ax2 = fig.add_subplot(122)
+# Plots a graph within the second subplot space and sharing the same y-axis
+ax2 = fig.add_subplot(122,
+                      sharey=ax1)
 
-# Plots a pie graph, emphasizing the youth group, and adding a percentage 
-ax2.pie(dec_sector_occupancy["occupancy"],
-        labels=sector_group,
-        explode=(0, 0, 0, 0, 0.2),
-        autopct="%1.1f%%")
+# Plots a bar graph, emphasizing the youth group in blue
+ax2.bar(data=dec_sector_occupancy,
+        x="sector",
+        height="occupancy",
+        color=["grey", "grey", "grey", "grey", "blue"])
 
+# Adding x- and y-axis titles
+fig.text(0.5, 0.04, 'Sector', ha='center')
+fig.text(0.075, 0.5, 'Occupancy', va='center', rotation='vertical')
+ 
 # Adding a title for the second plot
 plt.title("Toronto Occupancy Distribution - December 2020")
+
+# Adding a superior title
+fig.suptitle("Occupancy Comparison of Youth in Toronto: January vs December 2020")
 
 # Showing the subplots 
 plt.show()
